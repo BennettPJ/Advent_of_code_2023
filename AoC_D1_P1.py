@@ -1,6 +1,23 @@
 #Day 1 for Advent of Code 2023
 #https://adventofcode.com/2023/day/1
 
+
+calibration_values = []
+calibration_values_2 = []
+digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
+digit_words = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
+digit_mappings = {
+    "one" : "1",
+    "two" : "2",
+    "three" : "3",
+    "four": "4",
+    "five": "5",
+    "six": "6",
+    "seven": "7",
+    "eight": "8",
+    "nine": "9" 
+}
+
 def D1P1():
     print("Advent of Code Day 1 Puzzle 1")
     calibration_sum = 0;
@@ -25,41 +42,24 @@ def D1P1():
     
 def D1P2():
     print("Advent of Code Day 1 Puzzle 2")
-    digit_dict = {
-        "one": 1, 
-        "two": 2, 
-        "three": 3, 
-        "four": 4, 
-        "five": 5, 
-        "six": 6, 
-        "seven": 7, 
-        "eight": 8, 
-        "nine": 9}
-    calibration_sum = 0;
-    #Open the input file
     file = open("AoC_input_D1P1.txt", "r") 
     for line in file:
-        line = line.strip('\n') #remove the newline character
-        in1 = get_digit(line, digit_dict)
-        in2 = get_digit(''.join(reversed(line)), digit_dict)
-        if in1 != None and in2 != None:
-            calibration_sum += in1 + in2
+        line_digits = []
+        for k,v in enumerate(line):
+            #print(f"{k}: {line[k::]}")
+            for digit_word in digit_mappings.keys():
+                if line[k::].startswith(digit_word):
+                    line_digits.append(digit_mappings[digit_word])
+            if v in digits:
+                line_digits.append(v)
+        if len(line_digits) >= 2:
+            calibration_values_2.append(int(line_digits[0] + line_digits[-1]))
         else:
-            print("Error: Could not find two digits in line: " + line)
-    print("The calibration sum is: " + str(calibration_sum))
+            calibration_values_2.append(int(line_digits[0] + line_digits[0]))
+    print(sum(calibration_values_2))
+        
 
-def get_digit(line, digit_dict):
-    word = ""
-    for char in line:
-        if char.isalpha():
-            word += char
-            if any(key.startswith(word) for key in digit_dict.keys()):
-                if word in digit_dict or reversed(word) in digit_dict:
-                    return digit_dict[word]
-        elif char.isdigit():
-            return int(char)
-    return None
 
 if __name__ == "__main__":
-    #D1P1() #call puzzle 1 
+    D1P1() #call puzzle 1 
     D1P2() #call puzzle 2
